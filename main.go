@@ -19,8 +19,12 @@ func main() {
 		log.Println("Error parsing html: ", err)
 	}
 
-	getLinks(page, html)
-	miracles := getMiracles(html)
+	// getLinks(page, html)
+	// miracles := getMiracles(html)
+	//
+	// fmt.Printf("Miracles: %q\n", miracles)
 
-	fmt.Printf("Miracles: %q\n", miracles)
+	pyromancies := getPyromancies(html)
+
+	fmt.Printf("Pyromancies: %q\n", pyromancies)
 }

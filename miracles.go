@@ -85,17 +85,6 @@ func extractMiracleFromRow(row *goquery.Selection) Miracle {
 	return miracle
 }
 
-func cleanText(sel *goquery.Selection) string {
-	text := sel.Text()
-
-	text = strings.TrimSpace(text)
-	text = strings.Join(strings.Fields(text), " ")
-
-	text = strings.Trim(text, "-\u00a0")
-
-	return text
-}
-
 func cleanDescription(sel *goquery.Selection) string {
 	text := sel.Text()
 	text = strings.TrimSpace(text)
