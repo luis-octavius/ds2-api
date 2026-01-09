@@ -23,8 +23,12 @@ func main() {
 	// miracles := getMiracles(html)
 	//
 	// fmt.Printf("Miracles: %q\n", miracles)
+	//
+	// pyromancies := getPyromancies(html)
+	//
+	// fmt.Printf("Pyromancies: %q\n", pyromancies)
+	//
+	hexes := getHexes(html)
 
-	pyromancies := getPyromancies(html)
-
-	fmt.Printf("Pyromancies: %q\n", pyromancies)
+	fmt.Printf("Hexes: %q\n", hexes)
 }

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"strings"
 
@@ -18,28 +17,6 @@ type Miracle struct {
 	Type        string
 }
 
-func getLinks(rawURL string, html string) []string {
-	links := []string{}
-
-	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
-	if err != nil {
-		log.Println("getLinks - error: ", err)
-		return links
-	}
-
-	doc.Find("a.wiki_link").Each(func(_ int, s *goquery.Selection) {
-		text := s.Text()
-		link, ok := s.Attr("href")
-		if ok {
-			constructedURL := rawURL + link
-			links = append(links, constructedURL)
-		}
-		fmt.Println(text)
-	})
-
-	return links
-}
-
 func getMiracles(html string) []Miracle {
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
 	if err != nil {
@@ -53,6 +30,7 @@ func getMiracles(html string) []Miracle {
 			if row.Find("th").Length() > 0 {
 				return
 			}
+
 			miracle := extractMiracleFromRow(row)
 			debugRow(row)
 
