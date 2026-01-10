@@ -28,7 +28,10 @@ func main() {
 	//
 	// fmt.Printf("Pyromancies: %q\n", pyromancies)
 	//
-	hexes := getHexes(html)
+	// hexes := getHexes(html)
+	//
+	// fmt.Printf("Hexes: %q\n", hexes)
 
-	fmt.Printf("Hexes: %q\n", hexes)
+	sorceries := getSorceries(html)
+	fmt.Printf("Sorceries: %q\n", sorceries)
 }
