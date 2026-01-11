@@ -7,16 +7,6 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-type Miracle struct {
-	Name        string
-	Slots       string
-	Faith       string
-	Attunement  string
-	Description string
-	Acquired    string
-	Type        string
-}
-
 func getMiracles(html string) []Miracle {
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
 	if err != nil {

@@ -7,16 +7,6 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-type Pyromancy struct {
-	Name        string
-	Uses        string
-	Attunement  string
-	Description string
-	Acquired    string
-	Cost        string
-	Type        string
-}
-
 func getPyromancies(html string) []Pyromancy {
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
 	if err != nil {

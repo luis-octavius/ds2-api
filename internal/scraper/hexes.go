@@ -7,18 +7,6 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-type Hex struct {
-	Name         string
-	Uses         string
-	Attunement   string
-	Intelligence string
-	Faith        string
-	Description  string
-	Acquired     string
-	Cost         string
-	Type         string
-}
-
 func getHexes(html string) []Hex {
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
 	if err != nil {

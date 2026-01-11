@@ -7,17 +7,6 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-type Sorcery struct {
-	Name         string
-	Uses         string
-	Spellslot    string
-	Intelligence string
-	Description  string
-	Acquired     string
-	Cost         string
-	Type         string
-}
-
 func getSorceries(html string) []Sorcery {
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
 	if err != nil {
