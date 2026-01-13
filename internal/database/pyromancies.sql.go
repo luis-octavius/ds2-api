@@ -25,13 +25,13 @@ RETURNING id, name, uses, attunement, description, acquired, cost, pyromancy_typ
 `
 
 type CreatePyromancyParams struct {
-	Name          string
-	Uses          int32
-	Attunement    int32
-	Description   string
-	Acquired      string
-	Cost          int32
-	PyromancyType string
+	Name          string `json:"name"`
+	Uses          string `json:"uses"`
+	Attunement    int32  `json:"attunement"`
+	Description   string `json:"description"`
+	Acquired      string `json:"acquired"`
+	Cost          string `json:"cost"`
+	PyromancyType string `json:"pyromancy_type"`
 }
 
 func (q *Queries) CreatePyromancy(ctx context.Context, arg CreatePyromancyParams) (Pyromancy, error) {
@@ -56,4 +56,40 @@ func (q *Queries) CreatePyromancy(ctx context.Context, arg CreatePyromancyParams
 		&i.PyromancyType,
 	)
 	return i, err
+}
+
+const getPyromancies = `-- name: GetPyromancies :many
+SELECT id, name, uses, attunement, description, acquired, cost, pyromancy_type FROM pyromancies
+`
+
+func (q *Queries) GetPyromancies(ctx context.Context) ([]Pyromancy, error) {
+	rows, err := q.db.QueryContext(ctx, getPyromancies)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Pyromancy
+	for rows.Next() {
+		var i Pyromancy
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Uses,
+			&i.Attunement,
+			&i.Description,
+			&i.Acquired,
+			&i.Cost,
+			&i.PyromancyType,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }

@@ -11,3 +11,6 @@ VALUES (
   $7
 )
 RETURNING *;
+
+-- name: GetPyromancies :many 
+SELECT * FROM pyromancies;

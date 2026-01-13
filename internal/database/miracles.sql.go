@@ -10,7 +10,7 @@ import (
 )
 
 const createMiracle = `-- name: CreateMiracle :one
-INSERT INTO miracles (id, name, uses, attunement, description, acquired, cost, miracle_type)
+INSERT INTO miracles (id, name, uses, faith, attunement, description, acquired, miracle_type)
 VALUES (
   gen_random_uuid(),
   $1, 
@@ -21,27 +21,27 @@ VALUES (
   $6, 
   $7
 ) 
-RETURNING id, name, uses, attunement, description, acquired, cost, miracle_type
+RETURNING id, name, uses, attunement, faith, description, acquired, miracle_type
 `
 
 type CreateMiracleParams struct {
-	Name        string
-	Uses        int32
-	Attunement  int32
-	Description string
-	Acquired    string
-	Cost        int32
-	MiracleType string
+	Name        string `json:"name"`
+	Uses        string `json:"uses"`
+	Faith       int32  `json:"faith"`
+	Attunement  int32  `json:"attunement"`
+	Description string `json:"description"`
+	Acquired    string `json:"acquired"`
+	MiracleType string `json:"miracle_type"`
 }
 
 func (q *Queries) CreateMiracle(ctx context.Context, arg CreateMiracleParams) (Miracle, error) {
 	row := q.db.QueryRowContext(ctx, createMiracle,
 		arg.Name,
 		arg.Uses,
+		arg.Faith,
 		arg.Attunement,
 		arg.Description,
 		arg.Acquired,
-		arg.Cost,
 		arg.MiracleType,
 	)
 	var i Miracle
@@ -50,10 +50,46 @@ func (q *Queries) CreateMiracle(ctx context.Context, arg CreateMiracleParams) (M
 		&i.Name,
 		&i.Uses,
 		&i.Attunement,
+		&i.Faith,
 		&i.Description,
 		&i.Acquired,
-		&i.Cost,
 		&i.MiracleType,
 	)
 	return i, err
+}
+
+const getMiracles = `-- name: GetMiracles :many
+SELECT id, name, uses, attunement, faith, description, acquired, miracle_type FROM miracles
+`
+
+func (q *Queries) GetMiracles(ctx context.Context) ([]Miracle, error) {
+	rows, err := q.db.QueryContext(ctx, getMiracles)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Miracle
+	for rows.Next() {
+		var i Miracle
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Uses,
+			&i.Attunement,
+			&i.Faith,
+			&i.Description,
+			&i.Acquired,
+			&i.MiracleType,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }

@@ -10,7 +10,7 @@ import (
 )
 
 const createSorcery = `-- name: CreateSorcery :one
-INSERT INTO sorceries(id, name, uses, spellslot, intelligence, description, acquired, cost)
+INSERT INTO sorceries(id, name, uses, spellslot, intelligence, description, acquired, cost, sorcery_type)
 VALUES(
   gen_random_uuid(),
   $1, 
@@ -19,19 +19,21 @@ VALUES(
   $4,
   $5, 
   $6, 
-  $7
+  $7,
+  $8
 )
-RETURNING id, name, uses, spellslot, intelligence, description, acquired, cost
+RETURNING id, name, uses, spellslot, intelligence, description, acquired, cost, sorcery_type
 `
 
 type CreateSorceryParams struct {
-	Name         string
-	Uses         int32
-	Spellslot    int32
-	Intelligence int32
-	Description  string
-	Acquired     string
-	Cost         int32
+	Name         string `json:"name"`
+	Uses         string `json:"uses"`
+	Spellslot    int32  `json:"spellslot"`
+	Intelligence int32  `json:"intelligence"`
+	Description  string `json:"description"`
+	Acquired     string `json:"acquired"`
+	Cost         string `json:"cost"`
+	SorceryType  string `json:"sorcery_type"`
 }
 
 func (q *Queries) CreateSorcery(ctx context.Context, arg CreateSorceryParams) (Sorcery, error) {
@@ -43,6 +45,7 @@ func (q *Queries) CreateSorcery(ctx context.Context, arg CreateSorceryParams) (S
 		arg.Description,
 		arg.Acquired,
 		arg.Cost,
+		arg.SorceryType,
 	)
 	var i Sorcery
 	err := row.Scan(
@@ -54,6 +57,44 @@ func (q *Queries) CreateSorcery(ctx context.Context, arg CreateSorceryParams) (S
 		&i.Description,
 		&i.Acquired,
 		&i.Cost,
+		&i.SorceryType,
 	)
 	return i, err
+}
+
+const getSorceries = `-- name: GetSorceries :many
+SELECT id, name, uses, spellslot, intelligence, description, acquired, cost, sorcery_type FROM sorceries
+`
+
+func (q *Queries) GetSorceries(ctx context.Context) ([]Sorcery, error) {
+	rows, err := q.db.QueryContext(ctx, getSorceries)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Sorcery
+	for rows.Next() {
+		var i Sorcery
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Uses,
+			&i.Spellslot,
+			&i.Intelligence,
+			&i.Description,
+			&i.Acquired,
+			&i.Cost,
+			&i.SorceryType,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }

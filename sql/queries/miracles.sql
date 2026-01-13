@@ -1,5 +1,5 @@
 -- name: CreateMiracle :one 
-INSERT INTO miracles (id, name, uses, attunement, description, acquired, cost, miracle_type)
+INSERT INTO miracles (id, name, uses, faith, attunement, description, acquired, miracle_type)
 VALUES (
   gen_random_uuid(),
   $1, 
@@ -11,3 +11,8 @@ VALUES (
   $7
 ) 
 RETURNING *;
+
+-- name: GetMiracles :many 
+SELECT * FROM miracles; 
+
+

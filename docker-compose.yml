@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: ds2-db
+    environment:
+      POSTGRES_DB: ds2
+      POSTGRES_USER: dsuser
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/migrations:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dsuser"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Your Go API (standard http)
+  api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: ds2-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ds2
+      DB_USER: dsuser
+      DB_PASSWORD: ${DB_PASSWORD}
+      PORT: "8080"
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    volumes:
+      - ./api:/app  # For development hot-reload (optional)
+
+volumes:
+  postgres_data:

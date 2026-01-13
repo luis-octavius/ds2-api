@@ -13,3 +13,6 @@ VALUES (
   $9
 ) 
 RETURNING *;
+
+-- name: GetHexes :many 
+SELECT * FROM hexes;

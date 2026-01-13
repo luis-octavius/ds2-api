@@ -27,15 +27,15 @@ RETURNING id, name, uses, attunement, intelligence, faith, description, acquired
 `
 
 type CreateHexParams struct {
-	Name         string
-	Uses         int32
-	Attunement   int32
-	Intelligence int32
-	Faith        int32
-	Description  string
-	Acquired     string
-	Cost         int32
-	HexType      string
+	Name         string `json:"name"`
+	Uses         string `json:"uses"`
+	Attunement   int32  `json:"attunement"`
+	Intelligence int32  `json:"intelligence"`
+	Faith        int32  `json:"faith"`
+	Description  string `json:"description"`
+	Acquired     string `json:"acquired"`
+	Cost         string `json:"cost"`
+	HexType      string `json:"hex_type"`
 }
 
 func (q *Queries) CreateHex(ctx context.Context, arg CreateHexParams) (Hex, error) {
@@ -64,4 +64,42 @@ func (q *Queries) CreateHex(ctx context.Context, arg CreateHexParams) (Hex, erro
 		&i.HexType,
 	)
 	return i, err
+}
+
+const getHexes = `-- name: GetHexes :many
+SELECT id, name, uses, attunement, intelligence, faith, description, acquired, cost, hex_type FROM hexes
+`
+
+func (q *Queries) GetHexes(ctx context.Context) ([]Hex, error) {
+	rows, err := q.db.QueryContext(ctx, getHexes)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Hex
+	for rows.Next() {
+		var i Hex
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Uses,
+			&i.Attunement,
+			&i.Intelligence,
+			&i.Faith,
+			&i.Description,
+			&i.Acquired,
+			&i.Cost,
+			&i.HexType,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }

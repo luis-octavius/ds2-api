@@ -9,47 +9,48 @@ import (
 )
 
 type Hex struct {
-	ID           uuid.UUID
-	Name         string
-	Uses         int32
-	Attunement   int32
-	Intelligence int32
-	Faith        int32
-	Description  string
-	Acquired     string
-	Cost         int32
-	HexType      string
+	ID           uuid.UUID `json:"id"`
+	Name         string    `json:"name"`
+	Uses         string    `json:"uses"`
+	Attunement   int32     `json:"attunement"`
+	Intelligence int32     `json:"intelligence"`
+	Faith        int32     `json:"faith"`
+	Description  string    `json:"description"`
+	Acquired     string    `json:"acquired"`
+	Cost         string    `json:"cost"`
+	HexType      string    `json:"hex_type"`
 }
 
 type Miracle struct {
-	ID          uuid.UUID
-	Name        string
-	Uses        int32
-	Attunement  int32
-	Description string
-	Acquired    string
-	Cost        int32
-	MiracleType string
+	ID          uuid.UUID `json:"id"`
+	Name        string    `json:"name"`
+	Uses        string    `json:"uses"`
+	Attunement  int32     `json:"attunement"`
+	Faith       int32     `json:"faith"`
+	Description string    `json:"description"`
+	Acquired    string    `json:"acquired"`
+	MiracleType string    `json:"miracle_type"`
 }
 
 type Pyromancy struct {
-	ID            uuid.UUID
-	Name          string
-	Uses          int32
-	Attunement    int32
-	Description   string
-	Acquired      string
-	Cost          int32
-	PyromancyType string
+	ID            uuid.UUID `json:"id"`
+	Name          string    `json:"name"`
+	Uses          string    `json:"uses"`
+	Attunement    int32     `json:"attunement"`
+	Description   string    `json:"description"`
+	Acquired      string    `json:"acquired"`
+	Cost          string    `json:"cost"`
+	PyromancyType string    `json:"pyromancy_type"`
 }
 
 type Sorcery struct {
-	ID           uuid.UUID
-	Name         string
-	Uses         int32
-	Spellslot    int32
-	Intelligence int32
-	Description  string
-	Acquired     string
-	Cost         int32
+	ID           uuid.UUID `json:"id"`
+	Name         string    `json:"name"`
+	Uses         string    `json:"uses"`
+	Spellslot    int32     `json:"spellslot"`
+	Intelligence int32     `json:"intelligence"`
+	Description  string    `json:"description"`
+	Acquired     string    `json:"acquired"`
+	Cost         string    `json:"cost"`
+	SorceryType  string    `json:"sorcery_type"`
 }
