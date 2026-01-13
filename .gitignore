@@ -3,3 +3,4 @@ env
 *.env 
 
 ./internal/scraper
+internal/scraper/
